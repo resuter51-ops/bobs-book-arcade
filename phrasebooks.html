@@ -258,6 +258,15 @@
             font-size: 13px;
         }
         .footer a:hover { color: #ffaa00; }
+        
+        .footer { text-align: center; padding: 20px; border-top: 1px solid #1a1a2e; margin-top: 20px; }
+        .footer p { color: #444; font-size: 12px; }
+        a.big-nav-btn:hover, div a[href*="bobs-book-arcade"]:hover, div a[href*="payhip"]:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(255,170,0,0.12);
+            border-color: #ffaa00 !important;
+        }
+
         @media (max-width: 600px) {
             .phrasebooks-grid { grid-template-columns: 1fr; }
         }
@@ -387,10 +396,23 @@
         <span>🔒 Secure checkout via PayPal — No account required, just a card</span>
     </div>
 
+    <div style="max-width:1000px;margin:40px auto 0;padding:0 20px;">
+        <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;">
+            <a href="https://resuter51-ops.github.io/bobs-book-arcade/" style="flex:1;min-width:240px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 20px;background:linear-gradient(135deg,#0c0c16,#080812);border:2px solid #1a1a2e;border-radius:16px;text-decoration:none;transition:all 0.3s ease;min-height:120px;">
+                <span style="font-size:48px;margin-bottom:10px;">🎮</span>
+                <span style="color:#fff;font-size:20px;font-weight:bold;letter-spacing:1px;">BACK TO ARCADE</span>
+                <span style="color:#666688;font-size:13px;margin-top:6px;">Play free games</span>
+            </a>
+            <a href="https://payhip.com/NEWBOOKSANDTHINGS" target="_blank" style="flex:1;min-width:240px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 20px;background:linear-gradient(135deg,#0c0c16,#080812);border:2px solid #1a1a2e;border-radius:16px;text-decoration:none;transition:all 0.3s ease;min-height:120px;">
+                <span style="font-size:48px;margin-bottom:10px;">📚</span>
+                <span style="color:#fff;font-size:20px;font-weight:bold;letter-spacing:1px;">BROWSE BOOKS</span>
+                <span style="color:#666688;font-size:13px;margin-top:6px;">By Bob on Payhip</span>
+            </a>
+        </div>
+    </div>
+
     <div class="footer">
-        <a href="https://resuter51-ops.github.io/bobs-book-arcade/">← Back to Arcade</a>
-        <br><br>
-        <a href="https://payhip.com/NEWBOOKSANDTHINGS" target="_blank">📚 Browse the Book Store</a>
+        <p style="color:#444;font-size:12px;margin-top:30px;">ReadySpeak Phrasebooks &copy; 2026</p>
     </div>
 
 </body>
