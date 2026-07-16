@@ -129,6 +129,7 @@
             align-items: center;
             justify-content: space-between;
             gap: 12px;
+            flex-wrap: wrap;
         }
         .price-tag {
             font-size: 22px;
@@ -142,11 +143,34 @@
             margin-left: 6px;
             font-weight: normal;
         }
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .try-btn {
+            display: inline-block;
+            padding: 9px 18px;
+            background: rgba(0, 150, 255, 0.12);
+            border: 1px solid rgba(0, 150, 255, 0.3);
+            color: #00aaff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .try-btn:hover {
+            background: rgba(0, 150, 255, 0.25);
+            color: #fff;
+        }
         .buy-btn {
             display: inline-block;
             padding: 9px 22px;
-            background: rgba(45, 138, 94, 0.15);
-            border: 1px solid rgba(45, 138, 94, 0.4);
+            background: rgba(45, 138, 94, 0.2);
+            border: 1px solid rgba(45, 138, 94, 0.5);
             color: #2d8a5e;
             text-decoration: none;
             border-radius: 6px;
@@ -154,9 +178,10 @@
             font-weight: bold;
             letter-spacing: 1px;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
         .buy-btn:hover {
-            background: rgba(45, 138, 94, 0.3);
+            background: rgba(45, 138, 94, 0.4);
             box-shadow: 0 0 15px rgba(45, 138, 94, 0.25);
             color: #fff;
         }
@@ -191,6 +216,36 @@
             font-weight: normal;
             margin-left: 8px;
         }
+        .bundle-buy {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 10px 28px;
+            background: rgba(45, 138, 94, 0.25);
+            border: 1px solid rgba(45, 138, 94, 0.5);
+            color: #2d8a5e;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .bundle-buy:hover {
+            background: rgba(45, 138, 94, 0.4);
+            box-shadow: 0 0 20px rgba(45, 138, 94, 0.3);
+            color: #fff;
+        }
+        .paypal-banner {
+            max-width: 1000px;
+            margin: 0 auto 30px;
+            padding: 12px 20px;
+            text-align: center;
+        }
+        .paypal-banner span {
+            color: #555566;
+            font-size: 12px;
+        }
         .footer {
             text-align: center;
             padding: 30px 20px;
@@ -224,8 +279,9 @@
 
     <div class="bundle-banner">
         <h3>5-PACK BUNDLE — All Languages</h3>
-        <p>Mix and match any 5 phrasebooks for one low price</p>
+        <p>Mix and match all 5 phrasebooks for one low price</p>
         <div class="bundle-price">$5.99 <span class="old">$14.99</span></div>
+        <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=resuter51%40gmail.com&item_name=ReadySpeak+5-Pack+Bundle+All+Languages&amount=5.99&currency_code=USD&return=https://resuter51-ops.github.io/bobs-book-arcade/thanks.html" class="bundle-buy">Buy Bundle — $5.99</a>
     </div>
 
     <div class="phrasebooks-grid">
@@ -241,7 +297,10 @@
                 <p>Essential Spanish for travel, dining, emergencies, and conversation. Includes audio pronunciation.</p>
                 <div class="phrase-price">
                     <span class="price-tag">$1.99 <span class="old-price">$4.99</span></span>
-                    <a href="https://resuter51-ops.github.io/readyspeak-spanish/" target="_blank" class="buy-btn">▶ TRY FREE</a>
+                    <div class="btn-row">
+                        <a href="https://resuter51-ops.github.io/readyspeak-spanish/" target="_blank" class="try-btn">▶ Try Demo</a>
+                        <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=resuter51%40gmail.com&item_name=ReadySpeak+Spanish+Phrasebook&amount=1.99&currency_code=USD&return=https://resuter51-ops.github.io/readyspeak-spanish/" class="buy-btn">Buy $1.99</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -257,7 +316,10 @@
                 <p>From café orders to emergency phrases. Master French essentials with audio guides.</p>
                 <div class="phrase-price">
                     <span class="price-tag">$1.99 <span class="old-price">$4.99</span></span>
-                    <a href="https://resuter51-ops.github.io/readyspeak-french/" target="_blank" class="buy-btn">▶ TRY FREE</a>
+                    <div class="btn-row">
+                        <a href="https://resuter51-ops.github.io/readyspeak-french/" target="_blank" class="try-btn">▶ Try Demo</a>
+                        <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=resuter51%40gmail.com&item_name=ReadySpeak+French+Phrasebook&amount=1.99&currency_code=USD&return=https://resuter51-ops.github.io/readyspeak-french/" class="buy-btn">Buy $1.99</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -273,7 +335,10 @@
                 <p>Travel essentials in Filipino and Tagalog. Greetings, food, directions, and cultural tips.</p>
                 <div class="phrase-price">
                     <span class="price-tag">$1.99 <span class="old-price">$4.99</span></span>
-                    <a href="https://resuter51-ops.github.io/readyspeak-filipino/" target="_blank" class="buy-btn">▶ TRY FREE</a>
+                    <div class="btn-row">
+                        <a href="https://resuter51-ops.github.io/readyspeak-filipino/" target="_blank" class="try-btn">▶ Try Demo</a>
+                        <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=resuter51%40gmail.com&item_name=ReadySpeak+Filipino+Phrasebook&amount=1.99&currency_code=USD&return=https://resuter51-ops.github.io/readyspeak-filipino/" class="buy-btn">Buy $1.99</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -289,7 +354,10 @@
                 <p>Communicate confidently in Haiti. Practical phrases for travel, health, and daily life.</p>
                 <div class="phrase-price">
                     <span class="price-tag">$1.99 <span class="old-price">$4.99</span></span>
-                    <a href="https://resuter51-ops.github.io/readyspeak-haitian-creole/" target="_blank" class="buy-btn">▶ TRY FREE</a>
+                    <div class="btn-row">
+                        <a href="https://resuter51-ops.github.io/readyspeak-haitian-creole/" target="_blank" class="try-btn">▶ Try Demo</a>
+                        <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=resuter51%40gmail.com&item_name=ReadySpeak+Haitian+Creole+Phrasebook&amount=1.99&currency_code=USD&return=https://resuter51-ops.github.io/readyspeak-haitian-creole/" class="buy-btn">Buy $1.99</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -305,11 +373,18 @@
                 <p>Colombian-specific Spanish with local slang, cultural context, and regional expressions.</p>
                 <div class="phrase-price">
                     <span class="price-tag">$1.99 <span class="old-price">$4.99</span></span>
-                    <a href="https://resuter51-ops.github.io/colombian-phrasebook/" target="_blank" class="buy-btn">▶ TRY FREE</a>
+                    <div class="btn-row">
+                        <a href="https://resuter51-ops.github.io/colombian-phrasebook/" target="_blank" class="try-btn">▶ Try Demo</a>
+                        <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=resuter51%40gmail.com&item_name=Colombian+Spanish+Phrasebook&amount=1.99&currency_code=USD&return=https://resuter51-ops.github.io/colombian-phrasebook/" class="buy-btn">Buy $1.99</a>
+                    </div>
                 </div>
             </div>
         </div>
 
+    </div>
+
+    <div class="paypal-banner">
+        <span>🔒 Secure checkout via PayPal — No account required, just a card</span>
     </div>
 
     <div class="footer">
