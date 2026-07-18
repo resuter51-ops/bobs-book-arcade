@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bob's Book Arcade</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: transparent;
+            color: #e0e0ed;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            overflow-x: hidden;
+        }
+        .arcade-header {
+            text-align: center;
+            padding: 20px 15px 15px;
+        }
+        .arcade-header h2 {
+            font-size: 24px;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(0, 150, 255, 0.3);
+            letter-spacing: 2px;
+        }
+        .arcade-header p {
+            font-size: 13px;
+            color: #ffaa00;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+        .game-card {
+            background: linear-gradient(145deg, #0c0c16 0%, #080812 100%);
+            border: 1px solid #1a1a2e;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            display: block;
+        }
+        .game-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 100, 200, 0.15);
+            border-color: #2a2a4e;
+        }
+        .game-thumb {
+            width: 100%;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .game-thumb .emoji-bg {
+            font-size: 48px;
+            opacity: 0.7;
+        }
+        .game-info {
+            padding: 12px 15px;
+        }
+        .game-info h3 {
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+        .game-info .genre {
+            font-size: 10px;
+            color: #ffaa00;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+        .game-info p {
+            font-size: 12px;
+            color: #888899;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        .play-btn {
+            display: inline-block;
+            padding: 6px 20px;
+            background: rgba(0, 150, 255, 0.15);
+            border: 1px solid rgba(0, 150, 255, 0.4);
+            color: #00f0ff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .game-tag {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255, 170, 0, 0.2);
+            border: 1px solid rgba(255, 170, 0, 0.5);
+            color: #ffaa00;
+            font-size: 9px;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 3px;
+        }
+        .game-tag.new {
+            background: rgba(0, 255, 100, 0.15);
+            border: 1px solid rgba(0, 255, 100, 0.4);
+            color: #00ff88;
+        }
+        @media (max-width: 500px) {
+            .games-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .game-info p { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="arcade-header">
+        <h2>BOB'S BOOK ARCADE</h2>
+        <p>8 Free Games • No signup, just play</p>
+    </div>
+
+    <div class="games-grid">
+        <a href="https://resuter51-ops.github.io/the-salvager-game/" target="_blank" class="game-card">
+            <div class="game-thumb" style="background: linear-gradient(135deg, #0a0a1a, #12122a);">
+                <div class="game-tag">Featured</div>
+                <span class="emoji-bg">🗡️</span>
+            </div>
+            <div class="game-info">
+                <h3>THE SALVAGER</h3>
+                <div class="genre">Co-Op Action</div>
+                <p>Fight through ushers, race to Room 412.</p>
+                <span class="play-btn">▶ PLAY</span>
+            </div>
+        </a>
+
+        <a href="https://resuter51-ops.github.io/interactive-fiction/" target="_blank" class="game-card">
+            <div class="game-thumb" style="background: linear-gradient(135deg, #0a0a1a, #1a1212);">
+                <span class="emoji-bg">📜</span>
+            </div>
+            <div class="game-info">
+                <h3>PROSPECTOR'S DILEMMA</h3>
+                <div class="genre">Text Adventure</div>
+                <p>Explore Facility 7. Multiple endings.</p>
+                <span class="play-btn">▶ PLAY</span>
+            </div>
+        </a>
+
+        <a href="https://resuter51-ops.github.io/dungeon-quest/" target="_blank" class="game-card">
+            <div class="game-thumb" style="background: linear-gradient(135deg, #0a0a0a, #1a0a1a);">
+                <span class="emoji-bg">🏰</span>
+            </div>
+            <div class="game-info">
+                <h3>DUNGEON QUEST</h3>
+                <div class="genre">Dungeon Crawler</div>
+                <p>20 floors of monsters and loot.</p>
+                <span class="play-btn">▶ PLAY</span>
+            </div>
+        </a>
+
+        <a href="https://resuter51-ops.github.io/pinball-quest/" target="_blank" class="game-card">
+            <div class="game-thumb" style="background: linear-gradient(135deg, #0a0a0a, #0a1a1a);">
+                <span class="emoji-bg">⚡</span>
+            </div>
+            <div class="game-info">
+                <h3>PINBALL QUEST</h3>
+                <div class="genre">Neon Pinball</div>
+                <p>Retro-future pinball. Sound on!</p>
+                <span class="play-btn">▶ PLAY</span>
+            </div>
+        </a>
+
+        <a href="https://resuter51-ops.github.io/word-search/" target="_blank" class="game-card">
+            <div class="game-thumb" style="background: linear-gradient(135deg, #0a1a0a, #0a0a1a);">
+                <div class="game-tag new">New!</div>
+                <span class="emoji-bg">🔤</span>
+            </div>
+            <div class="game-info">
+                <h3>WORD SEARCH</h3>
+                <div class="genre">Puzzle</div>
+                <p>Find Salvager words hidden in the grid.</p>
+                <span class="play-btn">▶ PLAY</span>
+            </div>
+        </a>
+
+        <a href="https://resuter51-ops.github.io/memory-match/" target="_blank" class="game-card">
+            <div class="game-thumb" style="background: linear-gradient(135deg, #1a0a1a, #0a0a1a);">
+                <div class="game-tag new">New!</div>
+                <span class="emoji-bg">🃏</span>
+            </div>
+            <div class="game-info">
+                <h3>MEMORY ARCADE</h3>
+                <div class="genre">Card Matching</div>
+                <p>Flip and match pairs. Test your memory!</p>
+                <span class="play-btn">▶ PLAY</span>
+            </div>
+        </a>
+
+        <a href="https://resuter51-ops.github.io/salvager-trivia/" target="_blank" class="game-card">
+            <div class="game-thumb" style="background: linear-gradient(135deg, #0a0a1a, #1a1a0a);">
+                <div class="game-tag new">New!</div>
+                <span class="emoji-bg">❓</span>
+            </div>
+            <div class="game-info">
+                <h3>SALVAGER TRIVIA</h3>
+                <div class="genre">Quiz</div>
+                <p>Test your book knowledge. 10 questions!</p>
+                <span class="play-btn">▶ PLAY</span>
+            </div>
+        </a>
+
+        <a href="https://resuter51-ops.github.io/tap-quest/" target="_blank" class="game-card">
+            <div class="game-thumb" style="background: linear-gradient(135deg, #0a1a1a, #1a0a0a);">
+                <div class="game-tag new">New!</div>
+                <span class="emoji-bg">👆</span>
+            </div>
+            <div class="game-info">
+                <h3>TAP QUEST</h3>
+                <div class="genre">Reaction Game</div>
+                <p>Tap targets, dodge bombs, grab stars!</p>
+                <span class="play-btn">▶ PLAY</span>
+            </div>
+        </a>
+    </div>
+
+</body>
+</html>
