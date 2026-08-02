@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You — ReadySpeak Phrasebook</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #05050a;
+            color: #e0e0ed;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 500px;
+            text-align: center;
+            padding: 40px 24px;
+        }
+        h1 { color: #2d8a5e; font-size: 28px; margin-bottom: 16px; }
+        p { color: #888899; font-size: 16px; line-height: 1.6; margin-bottom: 16px; }
+        .code-box {
+            background: rgba(45, 138, 94, 0.15);
+            border: 2px solid rgba(45, 138, 94, 0.4);
+            border-radius: 10px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+        .code-label {
+            font-size: 12px;
+            color: #555566;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+        .code-value {
+            font-size: 24px;
+            color: #2d8a5e;
+            font-weight: bold;
+            letter-spacing: 3px;
+            font-family: monospace;
+        }
+        .phrasebook-links {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .phrasebook-links a {
+            display: inline-block;
+            padding: 12px 24px;
+            background: rgba(0, 150, 255, 0.12);
+            border: 1px solid rgba(0, 150, 255, 0.3);
+            color: #00aaff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .phrasebook-links a:hover {
+            background: rgba(0, 150, 255, 0.25);
+            color: #fff;
+        }
+        .note {
+            font-size: 13px;
+            color: #555566;
+            margin-top: 20px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Thank You for Your Purchase!</h1>
+        <p>Your ReadySpeak Phrasebook access code is below. Click your phrasebook to enter the code and unlock all phrases.</p>
+        <div class="code-box">
+            <div class="code-label">Your Access Code</div>
+            <div class="code-value" id="unlock-code">ReadySpeak!2026</div>
+        </div>
+        <div class="phrasebook-links">
+            <a href="https://resuter51-ops.github.io/readyspeak-spanish/" target="_blank">ReadySpeak Spanish</a>
+            <a href="https://resuter51-ops.github.io/readyspeak-french/" target="_blank">ReadySpeak French</a>
+            <a href="https://resuter51-ops.github.io/readyspeak-filipino/" target="_blank">ReadySpeak Filipino</a>
+            <a href="https://resuter51-ops.github.io/readyspeak-haitian-creole/" target="_blank">ReadySpeak Haitian Creole</a>
+            <a href="https://resuter51-ops.github.io/colombian-phrasebook/" target="_blank">Colombian Spanish</a>
+        </div>
+        <p class="note">Save this code — you'll need it to unlock your phrasebook.</p>
+    </div>
+    <script>
+    // Auto-redirect to the phrasebook if one is specified in the URL
+    (function(){
+        var params = new URLSearchParams(window.location.search);
+        var lang = params.get('lang');
+        if(lang) {
+            setTimeout(function(){
+                window.location.href = 'https://resuter51-ops.github.io/' + lang + '/';
+            }, 5000);
+        }
+    })();
+    </script>
+</body>
+</html>
