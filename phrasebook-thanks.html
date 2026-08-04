@@ -15,11 +15,7 @@
             align-items: center;
             justify-content: center;
         }
-        .container {
-            max-width: 500px;
-            text-align: center;
-            padding: 40px 24px;
-        }
+        .container { max-width: 500px; text-align: center; padding: 40px 24px; }
         h1 { color: #2d8a5e; font-size: 28px; margin-bottom: 16px; }
         p { color: #888899; font-size: 16px; line-height: 1.6; margin-bottom: 16px; }
         .code-box {
@@ -29,76 +25,66 @@
             padding: 24px;
             margin: 24px 0;
         }
-        .code-label {
-            font-size: 12px;
-            color: #555566;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 8px;
-        }
-        .code-value {
-            font-size: 24px;
-            color: #2d8a5e;
-            font-weight: bold;
-            letter-spacing: 3px;
-            font-family: monospace;
-        }
-        .phrasebook-links {
-            margin-top: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        .code-label { font-size: 12px; color: #555566; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+        .code-value { font-size: 24px; color: #2d8a5e; font-weight: bold; letter-spacing: 3px; font-family: monospace; }
+        .phrasebook-links { margin-top: 30px; display: flex; flex-direction: column; gap: 10px; }
         .phrasebook-links a {
-            display: inline-block;
-            padding: 12px 24px;
-            background: rgba(0, 150, 255, 0.12);
-            border: 1px solid rgba(0, 150, 255, 0.3);
-            color: #00aaff;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            transition: all 0.3s ease;
+            display: inline-block; padding: 12px 24px;
+            background: rgba(0, 150, 255, 0.12); border: 1px solid rgba(0, 150, 255, 0.3);
+            color: #00aaff; text-decoration: none; border-radius: 8px;
+            font-size: 14px; font-weight: bold; transition: all 0.3s ease;
         }
-        .phrasebook-links a:hover {
-            background: rgba(0, 150, 255, 0.25);
-            color: #fff;
+        .phrasebook-links a:hover { background: rgba(0, 150, 255, 0.25); color: #fff; }
+        .note { font-size: 13px; color: #555566; margin-top: 20px; font-style: italic; }
+        .error-box {
+            background: rgba(200, 50, 50, 0.1); border: 2px solid rgba(200, 50, 50, 0.3);
+            border-radius: 10px; padding: 24px; margin: 24px 0;
         }
-        .note {
-            font-size: 13px;
-            color: #555566;
-            margin-top: 20px;
-            font-style: italic;
-        }
+        .error-box h2 { color: #cc6666; font-size: 18px; margin-bottom: 10px; }
+        .error-box p { color: #998888; font-size: 14px; }
+        .error-box a { color: #6699cc; font-size: 14px; text-decoration: underline; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Thank You for Your Purchase!</h1>
-        <p>Your ReadySpeak Phrasebook access code is below. Click your phrasebook to enter the code and unlock all phrases.</p>
-        <div class="code-box">
-            <div class="code-label">Your Access Code</div>
-            <div class="code-value" id="unlock-code">ReadySpeak!2026</div>
+        <div id="success-content" style="display:none;">
+            <h1>Thank You for Your Purchase!</h1>
+            <p>Your ReadySpeak Phrasebook access code is below. Click your phrasebook to enter the code and unlock all phrases.</p>
+            <div class="code-box">
+                <div class="code-label">Your Access Code</div>
+                <div class="code-value" id="unlock-code">ReadySpeak!2026</div>
+            </div>
+            <div class="phrasebook-links">
+                <a href="https://resuter51-ops.github.io/readyspeak-spanish/" target="_blank">ReadySpeak Spanish</a>
+                <a href="https://resuter51-ops.github.io/readyspeak-french/" target="_blank">ReadySpeak French</a>
+                <a href="https://resuter51-ops.github.io/readyspeak-filipino/" target="_blank">ReadySpeak Filipino</a>
+                <a href="https://resuter51-ops.github.io/readyspeak-haitian-creole/" target="_blank">ReadySpeak Haitian Creole</a>
+                <a href="https://resuter51-ops.github.io/colombian-phrasebook/" target="_blank">Colombian Spanish</a>
+            </div>
+            <p class="note">Save this code — you'll need it to unlock your phrasebook.</p>
         </div>
-        <div class="phrasebook-links">
-            <a href="https://resuter51-ops.github.io/readyspeak-spanish/" target="_blank">ReadySpeak Spanish</a>
-            <a href="https://resuter51-ops.github.io/readyspeak-french/" target="_blank">ReadySpeak French</a>
-            <a href="https://resuter51-ops.github.io/readyspeak-filipino/" target="_blank">ReadySpeak Filipino</a>
-            <a href="https://resuter51-ops.github.io/readyspeak-haitian-creole/" target="_blank">ReadySpeak Haitian Creole</a>
-            <a href="https://resuter51-ops.github.io/colombian-phrasebook/" target="_blank">Colombian Spanish</a>
+        <div id="error-content" style="display:none;">
+            <div class="error-box">
+                <h2>Purchase Verification Required</h2>
+                <p>This page is only accessible after completing a purchase. If you've already paid and reached this page from PayPal, please contact us at resuter51@gmail.com with your transaction ID and we'll send your unlock code right away.</p>
+            </div>
+            <p>Ready to buy a phrasebook? <a href="https://resuter51-ops.github.io/bobs-book-arcade/phrasebooks.html" style="color:#2d8a5e;text-decoration:underline;">Browse phrasebooks here</a></p>
         </div>
-        <p class="note">Save this code — you'll need it to unlock your phrasebook.</p>
     </div>
     <script>
-    // Auto-redirect to the phrasebook if one is specified in the URL
     (function(){
         var params = new URLSearchParams(window.location.search);
+        var tx = params.get('tx');
         var lang = params.get('lang');
-        if(lang) {
-            setTimeout(function(){
-                window.location.href = 'https://resuter51-ops.github.io/' + lang + '/';
-            }, 5000);
+        if (tx && tx.length > 4) {
+            document.getElementById('success-content').style.display = 'block';
+            if (lang) {
+                setTimeout(function(){
+                    window.location.href = 'https://resuter51-ops.github.io/' + lang + '/';
+                }, 8000);
+            }
+        } else {
+            document.getElementById('error-content').style.display = 'block';
         }
     })();
     </script>
