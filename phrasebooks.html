@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReadySpeak Phrasebooks - $1.99 Each</title>
+    <title>ReadySpeak Phrasebooks — Medical & Social Editions</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -64,67 +64,114 @@
             letter-spacing: 1px;
             position: relative;
         }
-        .phrasebooks-grid {
+        .edition-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 30px auto 10px;
+            flex-wrap: wrap;
+        }
+        .edition-tab {
+            padding: 10px 28px;
+            border: 2px solid #1a1a2e;
+            border-radius: 20px;
+            background: transparent;
+            color: #666688;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            font-family: inherit;
+        }
+        .edition-tab.active {
+            background: rgba(212, 168, 73, 0.15);
+            border-color: rgba(212, 168, 73, 0.5);
+            color: #d4a849;
+        }
+        .edition-tab.med-tab.active {
+            background: rgba(45, 138, 94, 0.2);
+            border-color: rgba(45, 138, 94, 0.5);
+            color: #fff;
+        }
+        .edition-tab.soc-tab.active {
+            background: rgba(192, 57, 43, 0.2);
+            border-color: rgba(192, 57, 43, 0.5);
+            color: #fff;
+        }
+
+        .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 24px;
-            max-width: 1000px;
-            margin: 40px auto;
+            max-width: 1200px;
+            margin: 30px auto;
             padding: 0 20px;
         }
-        .phrase-card {
+        .product-card {
             background: linear-gradient(145deg, #0c0c16 0%, #080812 100%);
             border: 1px solid #1a1a2e;
-            border-radius: 12px;
+            border-radius: 14px;
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            position: relative;
         }
-        .phrase-card:hover {
+        .product-card:hover {
             transform: translateY(-6px);
             box-shadow: 0 12px 40px rgba(0, 180, 120, 0.12);
             border-color: #2a2a4e;
         }
-        .phrase-thumb {
+        .product-card.social:hover {
+            box-shadow: 0 12px 40px rgba(192, 57, 43, 0.12);
+        }
+        .product-card.medical { border-top: 3px solid rgba(45, 138, 94, 0.4); }
+        .product-card.social { border-top: 3px solid rgba(192, 57, 43, 0.4); }
+        .product-image {
             width: 100%;
-            height: 160px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
+            height: 200px;
+            object-fit: cover;
+            display: block;
         }
-        .phrase-thumb .flag {
-            font-size: 64px;
-            z-index: 1;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+        .product-info { padding: 20px; }
+        .product-info .edition-badge {
+            display: inline-block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-weight: bold;
         }
-        .phrase-thumb .glow {
-            position: absolute;
-            inset: 0;
-            z-index: 0;
+        .medical-badge {
+            background: rgba(45, 138, 94, 0.2);
+            color: #2d8a5e;
+            border: 1px solid rgba(45, 138, 94, 0.3);
         }
-        .phrase-info { padding: 20px; }
-        .phrase-info h3 {
+        .social-badge {
+            background: rgba(192, 57, 43, 0.2);
+            color: #e74c3c;
+            border: 1px solid rgba(192, 57, 43, 0.3);
+        }
+        .product-info h3 {
             font-size: 18px;
             color: #fff;
             margin-bottom: 4px;
             letter-spacing: 1px;
         }
-        .phrase-info .lang {
+        .product-info .phrase-count {
             font-size: 12px;
-            color: #2d8a5e;
+            color: #555566;
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-bottom: 10px;
         }
-        .phrase-info p {
+        .product-info p {
             font-size: 13px;
             color: #888899;
-            line-height: 1.5;
+            line-height: 1.6;
             margin-bottom: 16px;
         }
-        .phrase-price {
+        .product-footer {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -137,16 +184,9 @@
             font-weight: bold;
             letter-spacing: 1px;
         }
-        .price-tag .old-price {
-            font-size: 14px;
-            color: #555566;
-            text-decoration: line-through;
-            margin-left: 6px;
-            font-weight: normal;
-        }
         .btn-row {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
         }
         .try-btn {
@@ -167,11 +207,11 @@
             background: rgba(0, 150, 255, 0.25);
             color: #fff;
         }
-        .buy-btn {
+        .paypal-btn {
             display: inline-block;
             padding: 9px 22px;
-            background: rgba(45, 138, 94, 0.2);
             border: 1px solid rgba(45, 138, 94, 0.5);
+            background: rgba(45, 138, 94, 0.2);
             color: #2d8a5e;
             text-decoration: none;
             border-radius: 6px;
@@ -180,73 +220,79 @@
             letter-spacing: 1px;
             transition: all 0.3s ease;
             cursor: pointer;
+            font-family: inherit;
         }
-        .buy-btn:hover {
+        .paypal-btn:hover {
             background: rgba(45, 138, 94, 0.4);
             box-shadow: 0 0 15px rgba(45, 138, 94, 0.25);
             color: #fff;
         }
+        .paypal-btn.social-buy {
+            background: rgba(192, 57, 43, 0.2);
+            border-color: rgba(192, 57, 43, 0.5);
+            color: #e74c3c;
+        }
+        .paypal-btn.social-buy:hover {
+            background: rgba(192, 57, 43, 0.4);
+            box-shadow: 0 0 15px rgba(192, 57, 43, 0.25);
+            color: #fff;
+        }
+
         .bundle-banner {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto 20px;
-            padding: 20px;
-            background: linear-gradient(135deg, rgba(45, 138, 94, 0.08), rgba(0, 150, 255, 0.05));
-            border: 1px solid rgba(45, 138, 94, 0.2);
-            border-radius: 10px;
+            padding: 24px;
+            background: linear-gradient(135deg, rgba(212, 168, 73, 0.08), rgba(45, 138, 94, 0.05));
+            border: 1px solid rgba(212, 168, 73, 0.2);
+            border-radius: 12px;
             text-align: center;
         }
         .bundle-banner h3 {
-            color: #2d8a5e;
-            font-size: 15px;
+            color: #d4a849;
+            font-size: 18px;
             margin-bottom: 6px;
         }
         .bundle-banner p {
             color: #888899;
-            font-size: 13px;
+            font-size: 14px;
+            margin-bottom: 8px;
         }
         .bundle-banner .bundle-price {
-            color: #aaaabb;
-            font-size: 18px;
-            font-weight: normal;
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
             margin-top: 8px;
-        }
-        .bundle-banner .bundle-price .old {
-            color: #555566;
-            text-decoration: line-through;
-            font-size: 16px;
-            font-weight: normal;
-            margin-left: 8px;
         }
         .bundle-buy {
             display: inline-block;
             margin-top: 12px;
-            padding: 8px 22px;
-            background: rgba(45, 138, 94, 0.15);
-            border: 1px solid rgba(45, 138, 94, 0.3);
-            color: #2d8a5e;
+            padding: 10px 28px;
+            background: rgba(212, 168, 73, 0.15);
+            border: 1px solid rgba(212, 168, 73, 0.4);
+            color: #d4a849;
             text-decoration: none;
             border-radius: 8px;
-            font-size: 13px;
-            font-weight: normal;
+            font-size: 14px;
+            font-weight: bold;
             letter-spacing: 1px;
             transition: all 0.3s ease;
             cursor: pointer;
+            font-family: inherit;
         }
         .bundle-buy:hover {
-            background: rgba(45, 138, 94, 0.4);
-            box-shadow: 0 0 20px rgba(45, 138, 94, 0.3);
+            background: rgba(212, 168, 73, 0.3);
+            box-shadow: 0 0 20px rgba(212, 168, 73, 0.3);
             color: #fff;
         }
-        .checkout-banner {
-            max-width: 1000px;
-            margin: 0 auto 30px;
-            padding: 12px 20px;
+
+        .checkout-info {
             text-align: center;
-        }
-        .checkout-banner span {
+            padding: 12px 20px;
             color: #555566;
             font-size: 12px;
         }
+        .checkout-info span { color: #777788; }
+
         .footer {
             text-align: center;
             padding: 30px 20px;
@@ -257,19 +303,13 @@
             color: #666688;
             text-decoration: none;
             font-size: 13px;
+            margin: 0 10px;
         }
         .footer a:hover { color: #ffaa00; }
-        
-        .footer { text-align: center; padding: 20px; border-top: 1px solid #1a1a2e; margin-top: 20px; }
-        .footer p { color: #444; font-size: 12px; }
-        a.big-nav-btn:hover, div a[href*="bobs-book-arcade"]:hover, div a[href*="payhip"]:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(255,170,0,0.12);
-            border-color: #ffaa00 !important;
-        }
+        .footer p { color: #444; font-size: 12px; margin-top: 8px; }
 
         @media (max-width: 600px) {
-            .phrasebooks-grid { grid-template-columns: 1fr; }
+            .products-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -278,114 +318,297 @@
     <div class="nav-bar">
         <a href="https://resuter51-ops.github.io/bobs-book-arcade/">🎮 Arcade</a>
         <a href="phrasebooks.html">📖 Phrasebooks</a>
-        <a href="https://payhip.com/NEWBOOKSANDTHINGS" target="_blank">📚 Book Store</a>
+        <a href="https://wordsandwheels.net">🏠 Home</a>
     </div>
 
     <div class="hero">
         <h1>READYSPEAK PHRASEBOOKS</h1>
-        <div class="tagline">Essential phrases for travelers • Audio included • Works offline</div>
-        <div class="price-badge">Only $1.99 each — Instant access</div>
+        <div class="tagline">Medical &amp; Social Editions • Audio included • Works offline on any device</div>
+        <div class="price-badge">Only $4.99 per edition — Instant access</div>
+    </div>
+
+    <div class="edition-tabs">
+        <button class="edition-tab active" onclick="filterEdition('all', this)">All Editions</button>
+        <button class="edition-tab med-tab" onclick="filterEdition('medical', this)">🏥 Medical</button>
+        <button class="edition-tab soc-tab" onclick="filterEdition('social', this)">✈️ Social</button>
     </div>
 
     <div class="bundle-banner">
-        <h3>5-PACK BUNDLE — All Languages</h3>
-        <p>Mix and match all 5 phrasebooks for one low price</p>
-        <div class="bundle-price">$5.99 <span class="old">$14.99</span></div>
-        <a href="https://wordsandwheels.net/b/PHRASEBUNDLE" class="bundle-buy" target="_blank">Buy Bundle — $5.99</a>
+        <h3>💬 10-EDITION BUNDLE — All Languages</h3>
+        <p>Get all 10 editions (5 Medical + 5 Social) for one low price</p>
+        <div class="bundle-price">$14.99 <span style="color:#555566;font-size:16px;font-weight:normal;text-decoration:line-through;margin-left:8px;">$49.90</span></div>
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:inline;margin-top:12px;">
+            <input type="hidden" name="cmd" value="_xclick">
+            <input type="hidden" name="business" value="resuter51@gmail.com">
+            <input type="hidden" name="item_name" value="ReadySpeak 10-Edition Bundle — All Languages">
+            <input type="hidden" name="amount" value="14.99">
+            <input type="hidden" name="currency_code" value="USD">
+            <input type="hidden" name="return" value="https://resuter51-ops.github.io/bobs-book-arcade/phrasebooks.html">
+            <input type="submit" value="Buy Bundle — $14.99" class="bundle-buy">
+        </form>
     </div>
 
-    <div class="phrasebooks-grid">
+    <div class="checkout-info">
+        <span>Secure checkout via PayPal — no PayPal account required, pay with any card</span>
+    </div>
 
-        <div class="phrase-card">
-            <div class="phrase-thumb" style="background: linear-gradient(135deg, #0a0a1a, #0a1a1a);">
-                <div class="glow" style="background: radial-gradient(ellipse at center, rgba(255,170,0,0.1), transparent 70%);"></div>
-                <span class="flag">🇪🇸</span>
-            </div>
-            <div class="phrase-info">
+    <div class="products-grid" id="productsGrid">
+
+        <!-- SPANISH MEDICAL -->
+        <div class="product-card medical" data-edition="medical">
+            <img src="https://media.base44.com/images/public/69b1cf645256e83c174a7c51/7880ff85e_generated_image.png" alt="ReadySpeak Spanish Medical Edition" class="product-image">
+            <div class="product-info">
+                <span class="edition-badge medical-badge">🏥 Medical Edition</span>
                 <h3>ReadySpeak Spanish</h3>
-                <div class="lang">Spanish • 300+ Phrases</div>
-                <p>Essential Spanish for travel, dining, emergencies, and conversation. Includes audio pronunciation.</p>
-                <div class="phrase-price">
-                    <span class="price-tag">$1.99 <span class="old-price">$4.99</span></span>
+                <div class="phrase-count">100 Phrases • Healthcare &amp; Caregiving</div>
+                <p>Essential Spanish for healthcare workers, caregivers, and patients. Covers symptoms, personal care, mobility, and emergencies with audio pronunciation.</p>
+                <div class="product-footer">
+                    <span class="price-tag">$4.99</span>
                     <div class="btn-row">
-                        <a href="https://resuter51-ops.github.io/readyspeak-spanish/" target="_blank" class="try-btn">▶ Try Demo</a>
-                        <a href="https://wordsandwheels.net/b/PHRASESP" class="buy-btn" target="_blank">Buy $1.99</a>
+                        <a href="https://resuter51-ops.github.io/readyspeak-spanish-medical/" target="_blank" class="try-btn">Try Free</a>
+                        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:inline;">
+                            <input type="hidden" name="cmd" value="_xclick">
+                            <input type="hidden" name="business" value="resuter51@gmail.com">
+                            <input type="hidden" name="item_name" value="ReadySpeak Spanish Medical Edition">
+                            <input type="hidden" name="amount" value="4.99">
+                            <input type="hidden" name="currency_code" value="USD">
+                            <input type="hidden" name="return" value="https://resuter51-ops.github.io/readyspeak-spanish-medical/">
+                            <input type="submit" value="Buy $4.99" class="paypal-btn">
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="phrase-card">
-            <div class="phrase-thumb" style="background: linear-gradient(135deg, #0a0a1a, #1a0a0a);">
-                <div class="glow" style="background: radial-gradient(ellipse at center, rgba(0,80,255,0.1), transparent 70%);"></div>
-                <span class="flag">🇫🇷</span>
+        <!-- SPANISH SOCIAL -->
+        <div class="product-card social" data-edition="social">
+            <img src="https://media.base44.com/images/public/69b1cf645256e83c174a7c51/6a3fc2934_generated_image.png" alt="ReadySpeak Spanish Social Edition" class="product-image">
+            <div class="product-info">
+                <span class="edition-badge social-badge">✈️ Social Edition</span>
+                <h3>ReadySpeak Spanish</h3>
+                <div class="phrase-count">112 Phrases • Travel &amp; Conversation</div>
+                <p>Essential Spanish for travelers and everyday conversation. Covers greetings, dining, travel, shopping, directions, and emergencies with audio.</p>
+                <div class="product-footer">
+                    <span class="price-tag">$4.99</span>
+                    <div class="btn-row">
+                        <a href="https://resuter51-ops.github.io/readyspeak-spanish-social/" target="_blank" class="try-btn">Try Free</a>
+                        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:inline;">
+                            <input type="hidden" name="cmd" value="_xclick">
+                            <input type="hidden" name="business" value="resuter51@gmail.com">
+                            <input type="hidden" name="item_name" value="ReadySpeak Spanish Social Edition">
+                            <input type="hidden" name="amount" value="4.99">
+                            <input type="hidden" name="currency_code" value="USD">
+                            <input type="hidden" name="return" value="https://resuter51-ops.github.io/readyspeak-spanish-social/">
+                            <input type="submit" value="Buy $4.99" class="paypal-btn social-buy">
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="phrase-info">
+        </div>
+
+        <!-- FRENCH MEDICAL -->
+        <div class="product-card medical" data-edition="medical">
+            <img src="https://media.base44.com/images/public/69b1cf645256e83c174a7c51/fd33e3b94_generated_image.png" alt="ReadySpeak French Medical Edition" class="product-image">
+            <div class="product-info">
+                <span class="edition-badge medical-badge">🏥 Medical Edition</span>
                 <h3>ReadySpeak French</h3>
-                <div class="lang">French • 300+ Phrases</div>
-                <p>From café orders to emergency phrases. Master French essentials with audio guides.</p>
-                <div class="phrase-price">
-                    <span class="price-tag">$1.99 <span class="old-price">$4.99</span></span>
+                <div class="phrase-count">100 Phrases • Healthcare &amp; Caregiving</div>
+                <p>Essential French for healthcare workers, caregivers, and patients. Covers symptoms, personal care, mobility, and emergencies with audio pronunciation.</p>
+                <div class="product-footer">
+                    <span class="price-tag">$4.99</span>
                     <div class="btn-row">
-                        <a href="https://resuter51-ops.github.io/readyspeak-french/" target="_blank" class="try-btn">▶ Try Demo</a>
-                        <a href="https://wordsandwheels.net/b/PHRASEFR" class="buy-btn" target="_blank">Buy $1.99</a>
+                        <a href="https://resuter51-ops.github.io/readyspeak-french-medical/" target="_blank" class="try-btn">Try Free</a>
+                        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:inline;">
+                            <input type="hidden" name="cmd" value="_xclick">
+                            <input type="hidden" name="business" value="resuter51@gmail.com">
+                            <input type="hidden" name="item_name" value="ReadySpeak French Medical Edition">
+                            <input type="hidden" name="amount" value="4.99">
+                            <input type="hidden" name="currency_code" value="USD">
+                            <input type="hidden" name="return" value="https://resuter51-ops.github.io/readyspeak-french-medical/">
+                            <input type="submit" value="Buy $4.99" class="paypal-btn">
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="phrase-card">
-            <div class="phrase-thumb" style="background: linear-gradient(135deg, #0a0a1a, #0a1a1a);">
-                <div class="glow" style="background: radial-gradient(ellipse at center, rgba(255,80,0,0.1), transparent 70%);"></div>
-                <span class="flag">🇵🇭</span>
+        <!-- FRENCH SOCIAL -->
+        <div class="product-card social" data-edition="social">
+            <img src="https://media.base44.com/images/public/69b1cf645256e83c174a7c51/af0173a47_generated_image.png" alt="ReadySpeak French Social Edition" class="product-image">
+            <div class="product-info">
+                <span class="edition-badge social-badge">✈️ Social Edition</span>
+                <h3>ReadySpeak French</h3>
+                <div class="phrase-count">112 Phrases • Travel &amp; Conversation</div>
+                <p>Essential French for travelers and everyday conversation. Covers greetings, dining, travel, shopping, directions, and emergencies with audio.</p>
+                <div class="product-footer">
+                    <span class="price-tag">$4.99</span>
+                    <div class="btn-row">
+                        <a href="https://resuter51-ops.github.io/readyspeak-french-social/" target="_blank" class="try-btn">Try Free</a>
+                        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:inline;">
+                            <input type="hidden" name="cmd" value="_xclick">
+                            <input type="hidden" name="business" value="resuter51@gmail.com">
+                            <input type="hidden" name="item_name" value="ReadySpeak French Social Edition">
+                            <input type="hidden" name="amount" value="4.99">
+                            <input type="hidden" name="currency_code" value="USD">
+                            <input type="hidden" name="return" value="https://resuter51-ops.github.io/readyspeak-french-social/">
+                            <input type="submit" value="Buy $4.99" class="paypal-btn social-buy">
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="phrase-info">
+        </div>
+
+        <!-- FILIPINO MEDICAL -->
+        <div class="product-card medical" data-edition="medical">
+            <img src="https://media.base44.com/images/public/69b1cf645256e83c174a7c51/e939107c3_generated_image.png" alt="ReadySpeak Filipino Medical Edition" class="product-image">
+            <div class="product-info">
+                <span class="edition-badge medical-badge">🏥 Medical Edition</span>
                 <h3>ReadySpeak Filipino</h3>
-                <div class="lang">Filipino/Tagalog • 300+ Phrases</div>
-                <p>Travel essentials in Filipino and Tagalog. Greetings, food, directions, and cultural tips.</p>
-                <div class="phrase-price">
-                    <span class="price-tag">$1.99 <span class="old-price">$4.99</span></span>
+                <div class="phrase-count">100 Phrases • Healthcare &amp; Caregiving</div>
+                <p>Essential Filipino/Tagalog for healthcare workers, caregivers, and patients. Covers symptoms, personal care, mobility, and emergencies with audio.</p>
+                <div class="product-footer">
+                    <span class="price-tag">$4.99</span>
                     <div class="btn-row">
-                        <a href="https://resuter51-ops.github.io/readyspeak-filipino/" target="_blank" class="try-btn">▶ Try Demo</a>
-                        <a href="https://wordsandwheels.net/b/PHRASEFIL" class="buy-btn" target="_blank">Buy $1.99</a>
+                        <a href="https://resuter51-ops.github.io/readyspeak-filipino-medical/" target="_blank" class="try-btn">Try Free</a>
+                        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:inline;">
+                            <input type="hidden" name="cmd" value="_xclick">
+                            <input type="hidden" name="business" value="resuter51@gmail.com">
+                            <input type="hidden" name="item_name" value="ReadySpeak Filipino Medical Edition">
+                            <input type="hidden" name="amount" value="4.99">
+                            <input type="hidden" name="currency_code" value="USD">
+                            <input type="hidden" name="return" value="https://resuter51-ops.github.io/readyspeak-filipino-medical/">
+                            <input type="submit" value="Buy $4.99" class="paypal-btn">
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="phrase-card">
-            <div class="phrase-thumb" style="background: linear-gradient(135deg, #0a0a1a, #0a1a0a);">
-                <div class="glow" style="background: radial-gradient(ellipse at center, rgba(0,180,80,0.1), transparent 70%);"></div>
-                <span class="flag">🇭🇹</span>
+        <!-- FILIPINO SOCIAL -->
+        <div class="product-card social" data-edition="social">
+            <img src="https://media.base44.com/images/public/69b1cf645256e83c174a7c51/312a71a6f_generated_image.png" alt="ReadySpeak Filipino Social Edition" class="product-image">
+            <div class="product-info">
+                <span class="edition-badge social-badge">✈️ Social Edition</span>
+                <h3>ReadySpeak Filipino</h3>
+                <div class="phrase-count">112 Phrases • Travel &amp; Conversation</div>
+                <p>Essential Filipino/Tagalog for travelers and everyday conversation. Covers greetings, dining, travel, shopping, directions, and emergencies with audio.</p>
+                <div class="product-footer">
+                    <span class="price-tag">$4.99</span>
+                    <div class="btn-row">
+                        <a href="https://resuter51-ops.github.io/readyspeak-filipino-social/" target="_blank" class="try-btn">Try Free</a>
+                        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:inline;">
+                            <input type="hidden" name="cmd" value="_xclick">
+                            <input type="hidden" name="business" value="resuter51@gmail.com">
+                            <input type="hidden" name="item_name" value="ReadySpeak Filipino Social Edition">
+                            <input type="hidden" name="amount" value="4.99">
+                            <input type="hidden" name="currency_code" value="USD">
+                            <input type="hidden" name="return" value="https://resuter51-ops.github.io/readyspeak-filipino-social/">
+                            <input type="submit" value="Buy $4.99" class="paypal-btn social-buy">
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="phrase-info">
+        </div>
+
+        <!-- HAITIAN CREOLE MEDICAL -->
+        <div class="product-card medical" data-edition="medical">
+            <img src="https://media.base44.com/images/public/69b1cf645256e83c174a7c51/fc32a0db5_generated_image.png" alt="ReadySpeak Haitian Creole Medical Edition" class="product-image">
+            <div class="product-info">
+                <span class="edition-badge medical-badge">🏥 Medical Edition</span>
                 <h3>ReadySpeak Haitian Creole</h3>
-                <div class="lang">Haitian Creole • 300+ Phrases</div>
-                <p>Communicate confidently in Haiti. Practical phrases for travel, health, and daily life.</p>
-                <div class="phrase-price">
-                    <span class="price-tag">$1.99 <span class="old-price">$4.99</span></span>
+                <div class="phrase-count">100 Phrases • Healthcare &amp; Caregiving</div>
+                <p>Essential Haitian Creole for healthcare workers, caregivers, and patients. Covers symptoms, personal care, mobility, and emergencies with audio.</p>
+                <div class="product-footer">
+                    <span class="price-tag">$4.99</span>
                     <div class="btn-row">
-                        <a href="https://resuter51-ops.github.io/readyspeak-haitian-creole/" target="_blank" class="try-btn">▶ Try Demo</a>
-                        <a href="https://wordsandwheels.net/b/PHRASEHT" class="buy-btn" target="_blank">Buy $1.99</a>
+                        <a href="https://resuter51-ops.github.io/readyspeak-haitian-creole-medical/" target="_blank" class="try-btn">Try Free</a>
+                        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:inline;">
+                            <input type="hidden" name="cmd" value="_xclick">
+                            <input type="hidden" name="business" value="resuter51@gmail.com">
+                            <input type="hidden" name="item_name" value="ReadySpeak Haitian Creole Medical Edition">
+                            <input type="hidden" name="amount" value="4.99">
+                            <input type="hidden" name="currency_code" value="USD">
+                            <input type="hidden" name="return" value="https://resuter51-ops.github.io/readyspeak-haitian-creole-medical/">
+                            <input type="submit" value="Buy $4.99" class="paypal-btn">
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="phrase-card">
-            <div class="phrase-thumb" style="background: linear-gradient(135deg, #0a0a1a, #1a1a0a);">
-                <div class="glow" style="background: radial-gradient(ellipse at center, rgba(255,200,0,0.1), transparent 70%);"></div>
-                <span class="flag">🇨🇴</span>
-            </div>
-            <div class="phrase-info">
-                <h3>Colombian Spanish</h3>
-                <div class="lang">Colombian Spanish • 250+ Phrases</div>
-                <p>Colombian-specific Spanish with local slang, cultural context, and regional expressions.</p>
-                <div class="phrase-price">
-                    <span class="price-tag">$1.99 <span class="old-price">$4.99</span></span>
+        <!-- HAITIAN CREOLE SOCIAL -->
+        <div class="product-card social" data-edition="social">
+            <img src="https://media.base44.com/images/public/69b1cf645256e83c174a7c51/944d47af9_generated_image.png" alt="ReadySpeak Haitian Creole Social Edition" class="product-image">
+            <div class="product-info">
+                <span class="edition-badge social-badge">✈️ Social Edition</span>
+                <h3>ReadySpeak Haitian Creole</h3>
+                <div class="phrase-count">112 Phrases • Travel &amp; Conversation</div>
+                <p>Essential Haitian Creole for travelers and everyday conversation. Covers greetings, dining, travel, shopping, directions, and emergencies with audio.</p>
+                <div class="product-footer">
+                    <span class="price-tag">$4.99</span>
                     <div class="btn-row">
-                        <a href="https://resuter51-ops.github.io/colombian-phrasebook/" target="_blank" class="try-btn">▶ Try Demo</a>
-                        <a href="https://wordsandwheels.net/b/PHRASECO" class="buy-btn" target="_blank">Buy $1.99</a>
+                        <a href="https://resuter51-ops.github.io/readyspeak-haitian-creole-social/" target="_blank" class="try-btn">Try Free</a>
+                        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:inline;">
+                            <input type="hidden" name="cmd" value="_xclick">
+                            <input type="hidden" name="business" value="resuter51@gmail.com">
+                            <input type="hidden" name="item_name" value="ReadySpeak Haitian Creole Social Edition">
+                            <input type="hidden" name="amount" value="4.99">
+                            <input type="hidden" name="currency_code" value="USD">
+                            <input type="hidden" name="return" value="https://resuter51-ops.github.io/readyspeak-haitian-creole-social/">
+                            <input type="submit" value="Buy $4.99" class="paypal-btn social-buy">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLOMBIAN MEDICAL -->
+        <div class="product-card medical" data-edition="medical">
+            <img src="https://media.base44.com/images/public/69b1cf645256e83c174a7c51/2feb50b22_generated_image.png" alt="ReadySpeak Colombian Medical Edition" class="product-image">
+            <div class="product-info">
+                <span class="edition-badge medical-badge">🏥 Medical Edition</span>
+                <h3>ReadySpeak Colombian Spanish</h3>
+                <div class="phrase-count">100 Phrases • Healthcare &amp; Caregiving</div>
+                <p>Essential Colombian Spanish for healthcare workers, caregivers, and patients. Covers symptoms, personal care, mobility, and emergencies with audio.</p>
+                <div class="product-footer">
+                    <span class="price-tag">$4.99</span>
+                    <div class="btn-row">
+                        <a href="https://resuter51-ops.github.io/readyspeak-colombian-medical/" target="_blank" class="try-btn">Try Free</a>
+                        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:inline;">
+                            <input type="hidden" name="cmd" value="_xclick">
+                            <input type="hidden" name="business" value="resuter51@gmail.com">
+                            <input type="hidden" name="item_name" value="ReadySpeak Colombian Medical Edition">
+                            <input type="hidden" name="amount" value="4.99">
+                            <input type="hidden" name="currency_code" value="USD">
+                            <input type="hidden" name="return" value="https://resuter51-ops.github.io/readyspeak-colombian-medical/">
+                            <input type="submit" value="Buy $4.99" class="paypal-btn">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLOMBIAN SOCIAL -->
+        <div class="product-card social" data-edition="social">
+            <img src="https://media.base44.com/images/public/69b1cf645256e83c174a7c51/89105f89a_generated_image.png" alt="ReadySpeak Colombian Social Edition" class="product-image">
+            <div class="product-info">
+                <span class="edition-badge social-badge">✈️ Social Edition</span>
+                <h3>ReadySpeak Colombian Spanish</h3>
+                <div class="phrase-count">112 Phrases • Travel &amp; Conversation</div>
+                <p>Essential Colombian Spanish for travelers and everyday conversation. Covers greetings, dining, travel, shopping, directions, and emergencies with audio.</p>
+                <div class="product-footer">
+                    <span class="price-tag">$4.99</span>
+                    <div class="btn-row">
+                        <a href="https://resuter51-ops.github.io/readyspeak-colombian-social/" target="_blank" class="try-btn">Try Free</a>
+                        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:inline;">
+                            <input type="hidden" name="cmd" value="_xclick">
+                            <input type="hidden" name="business" value="resuter51@gmail.com">
+                            <input type="hidden" name="item_name" value="ReadySpeak Colombian Social Edition">
+                            <input type="hidden" name="amount" value="4.99">
+                            <input type="hidden" name="currency_code" value="USD">
+                            <input type="hidden" name="return" value="https://resuter51-ops.github.io/readyspeak-colombian-social/">
+                            <input type="submit" value="Buy $4.99" class="paypal-btn social-buy">
+                        </form>
                     </div>
                 </div>
             </div>
@@ -393,28 +616,27 @@
 
     </div>
 
-    <div class="checkout-banner">
-        <span>🔒 Secure checkout via Payhip — No account required, just a card</span>
-    </div>
-
-    <div style="max-width:1000px;margin:40px auto 0;padding:0 20px;">
-        <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;">
-            <a href="https://resuter51-ops.github.io/bobs-book-arcade/" style="flex:1;min-width:240px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 20px;background:linear-gradient(135deg,#0c0c16,#080812);border:2px solid #1a1a2e;border-radius:16px;text-decoration:none;transition:all 0.3s ease;min-height:120px;">
-                <span style="font-size:48px;margin-bottom:10px;">🎮</span>
-                <span style="color:#fff;font-size:20px;font-weight:bold;letter-spacing:1px;">BACK TO ARCADE</span>
-                <span style="color:#666688;font-size:13px;margin-top:6px;">Play free games</span>
-            </a>
-            <a href="https://payhip.com/NEWBOOKSANDTHINGS" target="_blank" style="flex:1;min-width:240px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 20px;background:linear-gradient(135deg,#0c0c16,#080812);border:2px solid #1a1a2e;border-radius:16px;text-decoration:none;transition:all 0.3s ease;min-height:120px;">
-                <span style="font-size:48px;margin-bottom:10px;">📚</span>
-                <span style="color:#fff;font-size:20px;font-weight:bold;letter-spacing:1px;">BROWSE BOOKS</span>
-                <span style="color:#666688;font-size:13px;margin-top:6px;">By Bob on Payhip</span>
-            </a>
-        </div>
+    <div class="checkout-info">
+        <span>Secure checkout via PayPal — no PayPal account required, pay with any card</span>
     </div>
 
     <div class="footer">
-        <p style="color:#444;font-size:12px;margin-top:30px;">ReadySpeak Phrasebooks &copy; 2026</p>
+        <a href="https://resuter51-ops.github.io/bobs-book-arcade/">🎮 Arcade</a>
+        <a href="https://wordsandwheels.net">🏠 Home</a>
+        <a href="https://wordsandwheels.net/blog/bob-s-thoughts">📝 Bob's Thoughts</a>
+        <p>ReadySpeak™ is a trademark of Words &amp; Wheels / Bob Suter</p>
     </div>
 
+    <script>
+    function filterEdition(edition, btn) {
+        const cards = document.querySelectorAll('.product-card');
+        const tabs = document.querySelectorAll('.edition-tab');
+        tabs.forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        cards.forEach(card => {
+            card.style.display = (edition === 'all' || card.dataset.edition === edition) ? '' : 'none';
+        });
+    }
+    </script>
 </body>
 </html>
