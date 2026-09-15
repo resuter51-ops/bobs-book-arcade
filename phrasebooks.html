@@ -285,6 +285,66 @@
             color: #fff;
         }
 
+        /* MIX & MATCH 10-PACK */
+        .pack-progress {
+            color: #fff;
+            font-size: 15px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .pack-progress .pack-hint { color: #888899; font-weight: normal; font-size: 13px; }
+        .pack-progress .pack-ready { color: #2d8a5e; }
+        .pack-summary {
+            color: #ccc;
+            font-size: 13px;
+            margin-top: 8px;
+            line-height: 1.6;
+        }
+        .bundle-buy.pack-buy-disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+        .bundle-buy.pack-buy-ready {
+            background: #2d8a5e;
+            border-color: #2d8a5e;
+            color: #fff;
+        }
+        .bundle-buy.pack-buy-ready:hover { background: #23724d; }
+        .pack-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px dashed rgba(255,255,255,0.12);
+        }
+        .pack-label {
+            color: #d4a849;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        .qty-controls { display: inline-flex; align-items: center; gap: 8px; }
+        .qty-btn {
+            width: 26px; height: 26px;
+            border-radius: 6px;
+            border: 1px solid rgba(212, 168, 73, 0.4);
+            background: rgba(212, 168, 73, 0.12);
+            color: #d4a849;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .qty-btn:hover { background: rgba(212, 168, 73, 0.3); }
+        .qty-num {
+            min-width: 22px;
+            text-align: center;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
         .checkout-info {
             text-align: center;
             padding: 12px 20px;
@@ -334,18 +394,23 @@
     </div>
 
     <div class="bundle-banner">
-        <h3>💬 10-EDITION BUNDLE — All Languages</h3>
-        <p>Get all 10 editions (5 Medical + 5 Social) for one low price</p>
+        <h3>🛒 BUILD YOUR OWN 10-PACK &mdash; Mix &amp; Match</h3>
+        <p>Any 10 editions for one low price &mdash; all Medical, all Social, or any combination you like (10 of one language? 5 Spanish Medical + 5 French Medical? You choose!)</p>
         <div class="bundle-price">$14.99 <span style="color:#555566;font-size:16px;font-weight:normal;text-decoration:line-through;margin-left:8px;">$49.90</span></div>
-        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:inline;margin-top:12px;">
-            <input type="hidden" name="cmd" value="_xclick">
-            <input type="hidden" name="business" value="resuter51@gmail.com">
-            <input type="hidden" name="item_name" value="ReadySpeak 10-Edition Bundle — All Languages">
-            <input type="hidden" name="amount" value="14.99">
-            <input type="hidden" name="currency_code" value="USD">
-            <input type="hidden" name="return" value="https://resuter51-ops.github.io/bobs-book-arcade/phrasebooks.html">
-            <input type="submit" value="Buy Bundle — $14.99" class="bundle-buy">
-        </form>
+        <div class="pack-progress"><span id="packCount">0</span> of 10 editions selected <span class="pack-hint" id="packHint">&mdash; pick any mix with the + buttons below</span></div>
+        <div class="pack-summary" id="packSummary" style="display:none;"></div>
+        <div class="pack-actions">
+            <button type="button" class="bundle-buy" style="margin-right:10px;" onclick="takeAll()">Take All 10 Editions</button>
+            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:inline;" onsubmit="return submitPack(event)">
+                <input type="hidden" name="cmd" value="_xclick">
+                <input type="hidden" name="business" value="resuter51@gmail.com">
+                <input type="hidden" name="item_name" id="packItemName" value="ReadySpeak 10-Edition Bundle">
+                <input type="hidden" name="amount" value="14.99">
+                <input type="hidden" name="currency_code" value="USD">
+                <input type="hidden" name="return" value="https://resuter51-ops.github.io/bobs-book-arcade/phrasebooks.html">
+                <input type="submit" id="packBuyBtn" value="Buy 10-Pack — $14.99" class="bundle-buy pack-buy-disabled" disabled>
+            </form>
+        </div>
     </div>
 
     <div class="checkout-info">
@@ -377,6 +442,7 @@
                         </form>
                     </div>
                 </div>
+                <div class="pack-row" data-name="Spanish Medical"><span class="pack-label">Add to 10-Pack</span><span class="qty-controls"><button type="button" class="qty-btn" onclick="bumpQty(this,-1)">&minus;</button><span class="qty-num">0</span><button type="button" class="qty-btn" onclick="bumpQty(this,1)">+</button></span></div>
             </div>
         </div>
 
@@ -403,6 +469,7 @@
                         </form>
                     </div>
                 </div>
+                <div class="pack-row" data-name="Spanish Social"><span class="pack-label">Add to 10-Pack</span><span class="qty-controls"><button type="button" class="qty-btn" onclick="bumpQty(this,-1)">&minus;</button><span class="qty-num">0</span><button type="button" class="qty-btn" onclick="bumpQty(this,1)">+</button></span></div>
             </div>
         </div>
 
@@ -429,6 +496,7 @@
                         </form>
                     </div>
                 </div>
+                <div class="pack-row" data-name="French Medical"><span class="pack-label">Add to 10-Pack</span><span class="qty-controls"><button type="button" class="qty-btn" onclick="bumpQty(this,-1)">&minus;</button><span class="qty-num">0</span><button type="button" class="qty-btn" onclick="bumpQty(this,1)">+</button></span></div>
             </div>
         </div>
 
@@ -455,6 +523,7 @@
                         </form>
                     </div>
                 </div>
+                <div class="pack-row" data-name="French Social"><span class="pack-label">Add to 10-Pack</span><span class="qty-controls"><button type="button" class="qty-btn" onclick="bumpQty(this,-1)">&minus;</button><span class="qty-num">0</span><button type="button" class="qty-btn" onclick="bumpQty(this,1)">+</button></span></div>
             </div>
         </div>
 
@@ -481,6 +550,7 @@
                         </form>
                     </div>
                 </div>
+                <div class="pack-row" data-name="Filipino Medical"><span class="pack-label">Add to 10-Pack</span><span class="qty-controls"><button type="button" class="qty-btn" onclick="bumpQty(this,-1)">&minus;</button><span class="qty-num">0</span><button type="button" class="qty-btn" onclick="bumpQty(this,1)">+</button></span></div>
             </div>
         </div>
 
@@ -507,6 +577,7 @@
                         </form>
                     </div>
                 </div>
+                <div class="pack-row" data-name="Filipino Social"><span class="pack-label">Add to 10-Pack</span><span class="qty-controls"><button type="button" class="qty-btn" onclick="bumpQty(this,-1)">&minus;</button><span class="qty-num">0</span><button type="button" class="qty-btn" onclick="bumpQty(this,1)">+</button></span></div>
             </div>
         </div>
 
@@ -533,6 +604,7 @@
                         </form>
                     </div>
                 </div>
+                <div class="pack-row" data-name="Haitian Creole Medical"><span class="pack-label">Add to 10-Pack</span><span class="qty-controls"><button type="button" class="qty-btn" onclick="bumpQty(this,-1)">&minus;</button><span class="qty-num">0</span><button type="button" class="qty-btn" onclick="bumpQty(this,1)">+</button></span></div>
             </div>
         </div>
 
@@ -559,6 +631,7 @@
                         </form>
                     </div>
                 </div>
+                <div class="pack-row" data-name="Haitian Creole Social"><span class="pack-label">Add to 10-Pack</span><span class="qty-controls"><button type="button" class="qty-btn" onclick="bumpQty(this,-1)">&minus;</button><span class="qty-num">0</span><button type="button" class="qty-btn" onclick="bumpQty(this,1)">+</button></span></div>
             </div>
         </div>
 
@@ -585,6 +658,7 @@
                         </form>
                     </div>
                 </div>
+                <div class="pack-row" data-name="Colombian Spanish Medical"><span class="pack-label">Add to 10-Pack</span><span class="qty-controls"><button type="button" class="qty-btn" onclick="bumpQty(this,-1)">&minus;</button><span class="qty-num">0</span><button type="button" class="qty-btn" onclick="bumpQty(this,1)">+</button></span></div>
             </div>
         </div>
 
@@ -611,6 +685,7 @@
                         </form>
                     </div>
                 </div>
+                <div class="pack-row" data-name="Colombian Spanish Social"><span class="pack-label">Add to 10-Pack</span><span class="qty-controls"><button type="button" class="qty-btn" onclick="bumpQty(this,-1)">&minus;</button><span class="qty-num">0</span><button type="button" class="qty-btn" onclick="bumpQty(this,1)">+</button></span></div>
             </div>
         </div>
 
@@ -628,6 +703,66 @@
     </div>
 
     <script>
+    // ---- MIX & MATCH 10-PACK ----
+    var PACK_SIZE = 10;
+    function packRows() { return document.querySelectorAll('.pack-row'); }
+    function getQty(row) { return parseInt(row.querySelector('.qty-num').textContent, 10) || 0; }
+    function setQty(row, n) {
+        n = Math.max(0, Math.min(PACK_SIZE, n));
+        row.querySelector('.qty-num').textContent = n;
+    }
+    function bumpQty(btn, delta) {
+        var row = btn.closest('.pack-row');
+        setQty(row, getQty(row) + delta);
+        refreshPack();
+    }
+    function readPack() {
+        var sel = [], total = 0;
+        packRows().forEach(function(row) {
+            var q = getQty(row);
+            if (q > 0) { sel.push({ name: row.dataset.name, qty: q }); total += q; }
+        });
+        return { sel: sel, total: total };
+    }
+    function refreshPack() {
+        var pack = readPack();
+        var countEl = document.getElementById('packCount');
+        var hintEl = document.getElementById('packHint');
+        var sumEl = document.getElementById('packSummary');
+        var buyBtn = document.getElementById('packBuyBtn');
+        countEl.textContent = pack.total;
+        if (pack.total === 0) {
+            hintEl.innerHTML = '&mdash; pick any mix with the + buttons below';
+            sumEl.style.display = 'none';
+        } else if (pack.total < PACK_SIZE) {
+            hintEl.innerHTML = '&mdash; add ' + (PACK_SIZE - pack.total) + ' more to unlock the bundle price';
+            sumEl.style.display = 'none';
+        } else {
+            hintEl.innerHTML = '<span class="pack-ready">&#10003; Bundle unlocked!</span>';
+            sumEl.style.display = 'block';
+            sumEl.innerHTML = '<strong>Your pack:</strong> ' + pack.sel.map(function(s) { return s.qty + '&times; ' + s.name; }).join(', ');
+        }
+        buyBtn.disabled = (pack.total !== PACK_SIZE);
+        buyBtn.classList.toggle('pack-buy-disabled', pack.total !== PACK_SIZE);
+        buyBtn.classList.toggle('pack-buy-ready', pack.total === PACK_SIZE);
+    }
+    function takeAll() {
+        packRows().forEach(function(row) { setQty(row, 1); });
+        refreshPack();
+    }
+    function submitPack(e) {
+        var pack = readPack();
+        if (pack.total !== PACK_SIZE) {
+            e.preventDefault();
+            alert('Please select exactly ' + PACK_SIZE + ' editions for the 10-Pack (you have ' + pack.total + ').');
+            return false;
+        }
+        var desc = pack.sel.map(function(s) { return s.qty + 'x ' + s.name; }).join(', ');
+        document.getElementById('packItemName').value = 'ReadySpeak Custom 10-Pack (mix & match): ' + desc;
+        return true;
+    }
+    refreshPack();
+
     function filterEdition(edition, btn) {
         const cards = document.querySelectorAll('.product-card');
         const tabs = document.querySelectorAll('.edition-tab');
