@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Lucky Pinball 3D</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { height: 100%; }
+body {
+  overflow: hidden; background: #0a0a0a; font-family: Arial, sans-serif;
+  user-select: none; -webkit-user-select: none; touch-action: none;
+  width: 100vw; height: 100vh; height: 100dvh;
+  display: flex; flex-direction: column; align-items: center;
+}
+
+/* Top score bar */
+#top-bar {
+  flex-shrink: 0; display: flex; gap: 10px; align-items: center; width: 100%;
+  max-width: 400px; background: #1a1a2e; border-bottom: 2px solid #e6c660;
+  padding: 6px 12px;
+}
+#top-bar h1 { color: #ffd700; font-size: 14px; flex: 1; }
+.sbox { text-align: center; }
+.sbox .l { font-size: 8px; color: #888; }
+.sbox .v { font-size: 16px; font-weight: bold; font-family: monospace; }
+.sbox .v.g { color: #4ade80; }
+.sbox .v.r { color: #f87171; }
+
+/* Canvas area - flex to fill available space */
+#canvas-area {
+  flex: 1; position: relative; display: flex; align-items: center; justify-content: center;
+  width: 100%; overflow: hidden; min-height: 0;
+}
+canvas {
+  max-width: 100%; max-height: 100%;
+  border: 3px solid #e6c660; border-radius: 8px;
+}
+
+/* Status text */
+#stext {
+  flex-shrink: 0; color: #4ade80; font-size: 12px; font-family: monospace;
+  padding: 4px 10px; text-align: center;
+}
+
+/* Control buttons - always visible at bottom */
+#ctrl {
+  flex-shrink: 0; display: flex; gap: 6px; justify-content: center;
+  padding: 6px 4px 10px; width: 100%;
+}
+.cbtn {
+  border: none; border-radius: 12px; font-weight: bold; cursor: pointer;
+  touch-action: none; -webkit-tap-highlight-color: transparent;
+  display: flex; align-items: center; justify-content: center;
+}
+.cbtn:active { opacity: 0.7; }
+.cbtn.flip {
+  width: 70px; height: 56px; font-size: 11px;
+  background: #0d7377; color: #fff; border: 2px solid #4ade80;
+}
+.cbtn.flip.r { background: #8b0000; border-color: #f87171; }
+.cbtn.launch {
+  width: 100px; height: 56px; font-size: 16px;
+  background: radial-gradient(circle at 35% 35%, #ffd700, #b8860b);
+  color: #1a1a00; border: 2px solid #e6c660;
+  box-shadow: 0 0 15px rgba(230,198,96,0.5);
+}
+.cbtn.start {
+  width: 200px; height: 60px; font-size: 18px;
+  background: radial-gradient(circle at 35% 35%, #ffd700, #b8860b);
+  color: #1a1a00; border: 3px solid #e6c660; border-radius: 14px;
+  box-shadow: 0 0 20px rgba(230,198,96,0.4);
+}
+
+/* Modal */
+#modal {
+  position: fixed; inset: 0; background: rgba(10,10,20,0.95); z-index: 500;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 12px; padding: 20px;
+}
+#modal.hide { display: none; }
+#modal h1 { color: #ffd700; font-size: 26px; text-align: center; }
+#modal .sub { color: #888; font-size: 13px; }
+#modal .fs { color: #4ade80; font-size: 22px; font-weight: bold; font-family: monospace; }
+#modal .hs { color: #e6c660; font-size: 14px; }
+#modal .hint { color: #666; font-size: 11px; text-align: center; line-height: 1.6; }
+
+/* In-game overlays */
+#mbadge {
+  position: absolute; top: 6px; right: 6px; background: rgba(26,26,46,0.9);
+  border: 2px solid #ff00ff; border-radius: 6px; padding: 3px 8px; display: none; z-index: 10;
+}
+#mbadge.show { display: block; }
+#mbadge .m { font-size: 7px; color: #888; }
+#mbadge .v { font-size: 16px; color: #ff00ff; font-weight: bold; }
+#bpop {
+  position: absolute; top: 40%; left: 50%; transform: translate(-50%,-50%) scale(0.3);
+  font-size: 20px; font-weight: bold; color: #ffd700; text-shadow: 0 0 15px rgba(255,215,0,0.8);
+  opacity: 0; pointer-events: none; z-index: 20; text-align: center; white-space: pre;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+#bpop.show { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+#twarn {
+  position: absolute; top: 40%; left: 50%; transform: translate(-50%,-50%);
+  font-size: 40px; font-weight: bold; color: #f87171; opacity: 0; pointer-events: none; z-index: 25;
+  transition: opacity 0.3s;
+}
+#twarn.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div id="top-bar">
+  <h1>LUCKY PINBALL 3D</h1>
+  <div class="sbox"><div class="l">SCORE</div><div class="v g" id="score-val">0</div></div>
+  <div class="sbox"><div class="l">BALLS</div><div class="v r" id="balls-val">3</div></div>
+</div>
+
+<div id="canvas-area">
+  <canvas id="game" width="480" height="720"></canvas>
+  <div id="mbadge"><div class="m">MULT</div><div class="v" id="mbadge-v">2x</div></div>
+  <div id="bpop"></div>
+  <div id="twarn">TILT!</div>
+</div>
+
+<div id="stext">Ready!</div>
+
+<div id="ctrl">
+  <button class="cbtn flip" id="btn-l" type="button">LEFT</button>
+  <button class="cbtn launch" id="btn-go" type="button">LAUNCH</button>
+  <button class="cbtn flip r" id="btn-r" type="button">RIGHT</button>
+</div>
+
+<div id="modal">
+  <h1>Lucky Pinball 3D</h1>
+  <div class="sub">Launch the ball and keep it in play!</div>
+  <div class="hint">LEFT CLICK = Left Flipper &nbsp;|&nbsp; RIGHT CLICK = Right Flipper<br>MIDDLE CLICK or SPACE = Launch<br>Arrows / A-D = Flippers &nbsp;|&nbsp; S = Nudge<br>On-screen buttons work too!</div>
+  <div class="hs" id="modal-hs">High Score: 0</div>
+  <button class="cbtn start" id="btn-start" type="button">START GAME</button>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+var cv = document.getElementById('game');
+var cx = cv.getContext('2d');
+var W = 480, H = 720;
+
+var GRAVITY = 0.2, FRICTION = 0.998, BOUNCE = 0.65;
+var score = 0, balls = 3, highScore = 0, mult = 1, multT = 0;
+var state = 'menu', tilted = false, tiltN = 0;
+
+var ball = { x: 447, y: 660, vx: 0, vy: 0, r: 11, active: false, inPlunger: true };
+var lf = { x: 145, y: 620, angle: 0.45, rest: 0.45, act: -0.55, len: 72, w: 18, on: false, side: 'left' };
+var rf = { x: 335, y: 620, angle: Math.PI-0.45, rest: Math.PI-0.45, act: Math.PI+0.55, len: 72, w: 18, on: false, side: 'right' };
+
+var bumpers = [
+  { x: 120, y: 180, r: 28, c: '#ff4444', g: '#ff6666', pts: 100, f: 0 },
+  { x: 240, y: 140, r: 32, c: '#44ff44', g: '#66ff66', pts: 150, f: 0 },
+  { x: 360, y: 180, r: 28, c: '#4488ff', g: '#66aaff', pts: 100, f: 0 },
+  { x: 170, y: 290, r: 24, c: '#ff44ff', g: '#ff66ff', pts: 120, f: 0 },
+  { x: 310, y: 290, r: 24, c: '#ffaa00', g: '#ffcc44', pts: 120, f: 0 }
+];
+
+var targets = [
+  { x: 70, y: 370, w: 50, h: 16, on: true },
+  { x: 135, y: 370, w: 50, h: 16, on: true },
+  { x: 295, y: 370, w: 50, h: 16, on: true },
+  { x: 360, y: 370, w: 50, h: 16, on: true }
+];
+
+var slings = [
+  { p: [{x:50,y:510},{x:50,y:570},{x:105,y:540}], f: 0 },
+  { p: [{x:430,y:510},{x:430,y:570},{x:375,y:540}], f: 0 }
+];
+
+var spin = { x: 240, y: 400, w: 60, rot: 0, spd: 0 };
+
+function walls() {
+  return [
+    [10,50,10,590],[470,50,470,700],[425,100,425,590],
+    [10,50,60,20],[60,20,180,10],[180,10,300,10],[300,10,400,25],[400,25,470,50],
+    [10,590,80,640],[425,590,400,640]
+  ];
+}
+
+function d(x1,y1,x2,y2){var dx=x2-x1,dy=y2-y1;return Math.sqrt(dx*dx+dy*dy);}
+function cl(v,a,b){return Math.max(a,Math.min(b,v));}
+
+function hitC(b,cx2,cy2,cr,bf){
+  var dd=d(b.x,b.y,cx2,cy2);
+  if(dd<b.r+cr){
+    var nx=(b.x-cx2)/(dd||.001),ny=(b.y-cy2)/(dd||.001);
+    b.x=cx2+nx*(b.r+cr);b.y=cy2+ny*(b.r+cr);
+    var dot=b.vx*nx+b.vy*ny;
+    if(dot<0){b.vx=b.vx-(1+bf)*dot*nx;b.vy=b.vy-(1+bf)*dot*ny;}
+    return true;
+  }
+  return false;
+}
+function hitL(b,x1,y1,x2,y2){
+  var dx=x2-x1,dy=y2-y1,ln=Math.sqrt(dx*dx+dy*dy);
+  if(ln===0)return false;
+  var t=cl(((b.x-x1)*dx+(b.y-y1)*dy)/(ln*ln),0,1);
+  var px=x1+t*dx,py=y1+t*dy,dd=d(b.x,b.y,px,py);
+  if(dd<b.r){
+    var nx=(b.x-px)/(dd||.001),ny=(b.y-py)/(dd||.001);
+    b.x=px+nx*b.r;b.y=py+ny*b.r;
+    var dot=b.vx*nx+b.vy*ny;
+    if(dot<0){b.vx=b.vx-(1+BOUNCE)*dot*nx;b.vy=b.vy-(1+BOUNCE)*dot*ny;}
+    return true;
+  }
+  return false;
+}
+function hitR(b,rx,ry,rw,rh){
+  var cx2=cl(b.x,rx,rx+rw),cy2=cl(b.y,ry,ry+rh),dd=d(b.x,b.y,cx2,cy2);
+  if(dd<b.r){
+    var nx=(b.x-cx2)/(dd||.001),ny=(b.y-cy2)/(dd||.001);
+    b.x=cx2+nx*b.r;b.y=cy2+ny*b.r;
+    var dot=b.vx*nx+b.vy*ny;
+    if(dot<0){b.vx=b.vx-(1+BOUNCE)*dot*nx;b.vy=b.vy-(1+BOUNCE)*dot*ny;}
+    return true;
+  }
+  return false;
+}
+function hitF(b,f){
+  var tx=f.x+Math.cos(f.angle)*f.len,ty=f.y+Math.sin(f.angle)*f.len;
+  var dx=tx-f.x,dy=ty-f.y,ln=Math.sqrt(dx*dx+dy*dy);
+  var t=cl(((b.x-f.x)*dx+(b.y-f.y)*dy)/(ln*ln),0,1);
+  var px=f.x+t*dx,py=f.y+t*dy,dd=d(b.x,b.y,px,py),fr=f.w/2;
+  if(dd<b.r+fr){
+    var nx=(b.x-px)/(dd||.001),ny=(b.y-py)/(dd||.001);
+    b.x=px+nx*(b.r+fr);b.y=py+ny*(b.r+fr);
+    var dot=b.vx*nx+b.vy*ny;
+    if(dot<0){b.vx=b.vx-(1+BOUNCE)*dot*nx;b.vy=b.vy-(1+BOUNCE)*dot*ny;}
+    if(f.on){b.vy-=10*(1-t)*0.7;b.vx+=(f.side==='left'?1:-1)*10*(1-t)*0.35;}
+    return true;
+  }
+  return false;
+}
+
+function setMsg(m){var e=document.getElementById('stext');if(e)e.textContent=m;}
+
+function startGame(){
+  score=0;balls=3;mult=1;multT=0;tiltN=0;tilted=false;
+  for(var i=0;i<targets.length;i++)targets[i].on=true;
+  resetBall();state='playing';
+  document.getElementById('modal').classList.add('hide');
+  setMsg('Press LAUNCH to shoot!');
+  updUI();
+}
+function resetBall(){ball.x=447;ball.y=660;ball.vx=0;ball.vy=0;ball.inPlunger=true;ball.active=false;}
+function launchBall(){
+  ensureAudio();
+  if(state!=='playing'){setMsg('Press START GAME first!');return;}
+  if(!ball.inPlunger){setMsg('Ball already in play');return;}
+  ball.vy=-(19+Math.random()*2);ball.vx=(Math.random()-.5)*1.5;
+  ball.inPlunger=false;ball.active=true;
+  setMsg('Ball launched!');snd('launch');
+}
+function setFlip(s,a){
+  if(state!=='playing')return;
+  if(s==='left')lf.on=a;
+  if(s==='right')rf.on=a;
+  if(a)snd('flip');
+}
+function loseBall(){
+  balls--;snd('drain');
+  if(balls<=0){gameOver();}
+  else{resetBall();showPop('BALL LOST\n'+balls+' left',1500);setMsg('Press LAUNCH!');}
+  updUI();
+}
+function gameOver(){
+  state='gameover';
+  if(score>highScore){highScore=score;try{localStorage.setItem('pin3d_hs',String(highScore));}catch(e){}}
+  try{if(window.parent&&window.parent!==window)window.parent.postMessage({type:'lucky-highscore',game:'lucky-pinball-3d',score:score,metric:'Final Score'},'*');}catch(e){}
+  var m=document.getElementById('modal');
+  m.innerHTML='<h1>GAME OVER</h1><div class="sub">Final Score</div><div class="fs">'+score.toLocaleString()+' pts</div><div class="hs">High Score: '+highScore.toLocaleString()+' pts</div><button class="cbtn start" id="btn-start" type="button">PLAY AGAIN</button>';
+  m.classList.remove('hide');
+  var nb=document.getElementById('btn-start');
+  if(nb)nb.addEventListener('click',function(){ensureAudio();startGame();});
+  setMsg('Game Over');
+}
+function addPts(p){score+=p*mult;updUI();}
+function checkTargets(){
+  var all=true;
+  for(var i=0;i<targets.length;i++){if(targets[i].on){all=false;break;}}
+  if(all){
+    addPts(500);mult=Math.min(mult+1,5);multT=600;
+    showPop('ALL TARGETS!\n'+mult+'x MULTIPLIER',2000);snd('bonus');
+    for(var i=0;i<targets.length;i++)targets[i].on=true;
+    updMult();
+  }
+}
+function showPop(t,dur){var e=document.getElementById('bpop');e.textContent=t;e.classList.add('show');setTimeout(function(){e.classList.remove('show');},dur||1500);}
+function updMult(){
+  var e=document.getElementById('mbadge');
+  if(mult>1){e.classList.add('show');document.getElementById('mbadge-v').textContent=mult+'x';}
+  else{e.classList.remove('show');}
+}
+function nudge(){
+  if(state!=='playing'||tilted)return;
+  ball.vx+=(Math.random()-.5)*4;tiltN++;
+  if(tiltN>=5){tilted=true;document.getElementById('twarn').classList.add('show');
+    setTimeout(function(){document.getElementById('twarn').classList.remove('show');tilted=false;tiltN=0;},2000);}
+}
+
+function update(){
+  if(state!=='playing')return;
+  var lT=lf.on?lf.act:lf.rest;lf.angle+=(lT-lf.angle)*0.4;
+  var rT=rf.on?rf.act:rf.rest;rf.angle+=(rT-rf.angle)*0.4;
+  if(multT>0){multT--;if(multT===0){mult=1;updMult();}}
+  if(ball.inPlunger){ball.x=447;ball.y=660;ball.vx=0;ball.vy=0;return;}
+  if(!ball.active)return;
+  ball.vy+=GRAVITY;ball.vx*=FRICTION;ball.vy*=FRICTION;
+  // Shooter lane exit: once ball clears the lane wall (y<100), guide it left
+  // into the playfield with a guaranteed entry velocity (like a curved shooter lane)
+  if(ball.x>425&&ball.y<100){if(ball.vx>-5.5)ball.vx=-5.5;}
+  var mv=22,v=Math.sqrt(ball.vx*ball.vx+ball.vy*ball.vy);
+  if(v>mv){ball.vx=(ball.vx/v)*mv;ball.vy=(ball.vy/v)*mv;}
+  ball.x+=ball.vx;ball.y+=ball.vy;
+  var ws=walls();
+  for(var i=0;i<ws.length;i++)hitL(ball,ws[i][0],ws[i][1],ws[i][2],ws[i][3]);
+  for(var i=0;i<bumpers.length;i++){var b=bumpers[i];if(hitC(ball,b.x,b.y,b.r,1.3)){addPts(b.pts);snd('bump');b.f=10;}}
+  for(var i=0;i<slings.length;i++){var s=slings[i];var h=hitL(ball,s.p[0].x,s.p[0].y,s.p[1].x,s.p[1].y)||hitL(ball,s.p[1].x,s.p[1].y,s.p[2].x,s.p[2].y)||hitL(ball,s.p[2].x,s.p[2].y,s.p[0].x,s.p[0].y);if(h){addPts(25);snd('sling');s.f=8;}}
+  for(var i=0;i<targets.length;i++){var t=targets[i];if(t.on&&hitR(ball,t.x,t.y,t.w,t.h)){t.on=false;addPts(75);snd('tgt');checkTargets();}}
+  if(ball.x>spin.x-spin.w/2&&ball.x<spin.x+spin.w/2&&Math.abs(ball.y-spin.y)<ball.r+8){addPts(50);spin.spd=0.5;snd('spin');}
+  if(spin.spd>0){spin.rot+=spin.spd;spin.spd*=0.95;}
+  if(!tilted){hitF(ball,lf);hitF(ball,rf);}
+  if(ball.y>H+20)loseBall();
+  if(ball.x>425&&ball.y>100&&ball.vy>0&&!ball.inPlunger){if(ball.y>H-80){resetBall();setMsg('Press LAUNCH!');}}
+  for(var i=0;i<bumpers.length;i++){if(bumpers[i].f>0)bumpers[i].f--;}
+  for(var i=0;i<slings.length;i++){if(slings[i].f>0)slings[i].f--;}
+}
+
+function render(){
+  cx.fillStyle='#0d0d1a';cx.fillRect(0,0,W,H);
+  var gr=cx.createRadialGradient(W/2,H/2,50,W/2,H/2,400);
+  gr.addColorStop(0,'#1a1a2e');gr.addColorStop(1,'#0a0a14');
+  cx.fillStyle=gr;cx.fillRect(0,0,W,H);
+  cx.strokeStyle='rgba(230,198,96,0.04)';cx.lineWidth=1;
+  for(var x=0;x<W;x+=30){cx.beginPath();cx.moveTo(x,0);cx.lineTo(x,H);cx.stroke();}
+  for(var y=0;y<H;y+=30){cx.beginPath();cx.moveTo(0,y);cx.lineTo(W,y);cx.stroke();}
+  var ws=walls();
+  cx.strokeStyle='#e6c660';cx.lineWidth=3;cx.shadowColor='rgba(230,198,96,0.3)';cx.shadowBlur=8;
+  for(var i=0;i<ws.length;i++){cx.beginPath();cx.moveTo(ws[i][0],ws[i][1]);cx.lineTo(ws[i][2],ws[i][3]);cx.stroke();}
+  cx.shadowBlur=0;
+  cx.fillStyle='rgba(40,40,60,0.5)';cx.fillRect(425,100,45,580);
+  cx.strokeStyle='#666';cx.lineWidth=2;
+  for(var i=0;i<8;i++){cx.beginPath();cx.moveTo(430,640-i*8);cx.lineTo(465,635-i*8);cx.stroke();}
+  cx.fillStyle=ball.inPlunger?'#4ade80':'#333';cx.fillRect(432,670,36,8);
+  for(var i=0;i<bumpers.length;i++){
+    var b=bumpers[i];
+    cx.shadowColor=b.g;cx.shadowBlur=15+(b.f||0)*2;
+    var bg=cx.createRadialGradient(b.x-5,b.y-5,2,b.x,b.y,b.r);
+    bg.addColorStop(0,b.g);bg.addColorStop(1,b.c);
+    cx.fillStyle=bg;cx.beginPath();cx.arc(b.x,b.y,b.r,0,Math.PI*2);cx.fill();
+    cx.shadowBlur=0;cx.strokeStyle='#fff';cx.lineWidth=2;
+    cx.beginPath();cx.arc(b.x,b.y,b.r,0,Math.PI*2);cx.stroke();
+    cx.fillStyle='rgba(255,255,255,0.15)';cx.beginPath();cx.arc(b.x,b.y,b.r*0.5,0,Math.PI*2);cx.fill();
+  }
+  for(var i=0;i<targets.length;i++){
+    var t=targets[i];
+    if(t.on){cx.fillStyle='#4ade80';cx.shadowColor='#4ade80';cx.shadowBlur=8;cx.fillRect(t.x,t.y,t.w,t.h);cx.shadowBlur=0;cx.strokeStyle='#fff';cx.lineWidth=1;cx.strokeRect(t.x,t.y,t.w,t.h);}
+    else{cx.strokeStyle='rgba(74,222,128,0.2)';cx.lineWidth=1;cx.strokeRect(t.x,t.y,t.w,t.h);}
+  }
+  for(var i=0;i<slings.length;i++){
+    var s=slings[i];
+    cx.fillStyle=(s.f||0)>0?'#ff88aa':'#ff4466';cx.shadowColor='#ff4466';cx.shadowBlur=10+(s.f||0)*2;
+    cx.beginPath();cx.moveTo(s.p[0].x,s.p[0].y);cx.lineTo(s.p[1].x,s.p[1].y);cx.lineTo(s.p[2].x,s.p[2].y);cx.closePath();cx.fill();
+    cx.shadowBlur=0;cx.strokeStyle='#fff';cx.lineWidth=2;cx.stroke();
+  }
+  cx.save();cx.translate(spin.x,spin.y);cx.rotate(spin.rot);
+  cx.fillStyle='#e6c660';cx.shadowColor='#e6c660';cx.shadowBlur=6;cx.fillRect(-spin.w/2,-4,spin.w,8);cx.shadowBlur=0;cx.restore();
+  drawFlip(lf);drawFlip(rf);
+  if(ball.active||ball.inPlunger){
+    cx.fillStyle='rgba(0,0,0,0.4)';cx.beginPath();cx.arc(ball.x+3,ball.y+3,ball.r,0,Math.PI*2);cx.fill();
+    var bg2=cx.createRadialGradient(ball.x-4,ball.y-4,1,ball.x,ball.y,ball.r);
+    bg2.addColorStop(0,'#fff');bg2.addColorStop(0.3,'#e0e0e0');bg2.addColorStop(0.7,'#999');bg2.addColorStop(1,'#666');
+    cx.fillStyle=bg2;cx.shadowColor='rgba(255,255,255,0.4)';cx.shadowBlur=10;
+    cx.beginPath();cx.arc(ball.x,ball.y,ball.r,0,Math.PI*2);cx.fill();cx.shadowBlur=0;
+    cx.fillStyle='rgba(255,255,255,0.6)';cx.beginPath();cx.arc(ball.x-3,ball.y-3,ball.r*0.3,0,Math.PI*2);cx.fill();
+  }
+  if(ball.inPlunger&&state==='playing'){
+    cx.fillStyle='rgba(74,222,128,0.9)';cx.font='bold 14px Arial';cx.textAlign='center';
+    cx.save();cx.translate(447,620);cx.rotate(-Math.PI/2);cx.fillText('PRESS LAUNCH',0,0);cx.restore();
+  }
+  cx.fillStyle='rgba(248,113,113,0.05)';cx.fillRect(80,640,320,80);
+}
+
+function drawFlip(f){
+  var tx=f.x+Math.cos(f.angle)*f.len,ty=f.y+Math.sin(f.angle)*f.len;
+  cx.strokeStyle='rgba(0,0,0,0.3)';cx.lineWidth=f.w+2;cx.lineCap='round';
+  cx.beginPath();cx.moveTo(f.x+2,f.y+2);cx.lineTo(tx+2,ty+2);cx.stroke();
+  var fg=cx.createLinearGradient(f.x,f.y,tx,ty);
+  if(f.on){fg.addColorStop(0,'#ffdd44');fg.addColorStop(1,'#ff8800');}
+  else{fg.addColorStop(0,'#e6c660');fg.addColorStop(1,'#b8860b');}
+  cx.strokeStyle=fg;cx.lineWidth=f.w;cx.lineCap='round';
+  cx.shadowColor=f.on?'rgba(255,200,0,0.5)':'rgba(230,198,96,0.2)';cx.shadowBlur=f.on?15:5;
+  cx.beginPath();cx.moveTo(f.x,f.y);cx.lineTo(tx,ty);cx.stroke();cx.shadowBlur=0;
+  cx.fillStyle='#666';cx.beginPath();cx.arc(f.x,f.y,5,0,Math.PI*2);cx.fill();
+  cx.strokeStyle='#e6c660';cx.lineWidth=2;cx.stroke();
+}
+
+function updUI(){
+  document.getElementById('score-val').textContent=score.toLocaleString();
+  document.getElementById('balls-val').textContent=balls;
+}
+
+var actx=null;
+function ensureAudio(){
+  if(!actx){try{actx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){actx=null;}}
+  if(actx&&actx.state==='suspended'){try{actx.resume();}catch(e){}}
+}
+function snd(t){
+  ensureAudio();if(!actx)return;
+  try{
+    var n=actx.currentTime,o,g;
+    if(t==='bump'){o=actx.createOscillator();g=actx.createGain();o.type='square';o.frequency.setValueAtTime(600,n);o.frequency.exponentialRampToValueAtTime(200,n+.1);g.gain.setValueAtTime(.1,n);g.gain.exponentialRampToValueAtTime(.001,n+.1);o.connect(g);g.connect(actx.destination);o.start(n);o.stop(n+.1);}
+    else if(t==='flip'){o=actx.createOscillator();g=actx.createGain();o.type='triangle';o.frequency.value=150;g.gain.setValueAtTime(.06,n);g.gain.exponentialRampToValueAtTime(.001,n+.05);o.connect(g);g.connect(actx.destination);o.start(n);o.stop(n+.05);}
+    else if(t==='launch'){o=actx.createOscillator();g=actx.createGain();o.type='sawtooth';o.frequency.setValueAtTime(100,n);o.frequency.exponentialRampToValueAtTime(400,n+.2);g.gain.setValueAtTime(.08,n);g.gain.exponentialRampToValueAtTime(.001,n+.2);o.connect(g);g.connect(actx.destination);o.start(n);o.stop(n+.2);}
+    else if(t==='sling'){o=actx.createOscillator();g=actx.createGain();o.type='square';o.frequency.value=800;g.gain.setValueAtTime(.08,n);g.gain.exponentialRampToValueAtTime(.001,n+.08);o.connect(g);g.connect(actx.destination);o.start(n);o.stop(n+.08);}
+    else if(t==='tgt'){o=actx.createOscillator();g=actx.createGain();o.type='sine';o.frequency.setValueAtTime(880,n);o.frequency.exponentialRampToValueAtTime(1320,n+.05);g.gain.setValueAtTime(.08,n);g.gain.exponentialRampToValueAtTime(.001,n+.1);o.connect(g);g.connect(actx.destination);o.start(n);o.stop(n+.1);}
+    else if(t==='spin'){o=actx.createOscillator();g=actx.createGain();o.type='triangle';o.frequency.value=1200;g.gain.setValueAtTime(.04,n);g.gain.exponentialRampToValueAtTime(.001,n+.05);o.connect(g);g.connect(actx.destination);o.start(n);o.stop(n+.05);}
+    else if(t==='drain'){o=actx.createOscillator();g=actx.createGain();o.type='sawtooth';o.frequency.setValueAtTime(300,n);o.frequency.exponentialRampToValueAtTime(50,n+.5);g.gain.setValueAtTime(.1,n);g.gain.exponentialRampToValueAtTime(.001,n+.5);o.connect(g);g.connect(actx.destination);o.start(n);o.stop(n+.5);}
+    else if(t==='bonus'){var fr=[523,659,784,1047,1319];for(var i=0;i<fr.length;i++){(function(f,idx){var oo=actx.createOscillator(),gg=actx.createGain();oo.type='sine';oo.frequency.value=f;gg.gain.setValueAtTime(0,n+idx*.08);gg.gain.linearRampToValueAtTime(.1,n+idx*.08+.03);gg.gain.exponentialRampToValueAtTime(.001,n+idx*.08+.3);oo.connect(gg);gg.connect(actx.destination);oo.start(n+idx*.08);oo.stop(n+idx*.08+.3);})(fr[i],i);}}
+  }catch(e){}
+}
+
+// EVENTS - using pointer events for universal mouse+touch support
+var sb=document.getElementById('btn-start');
+if(sb)sb.addEventListener('click',function(){ensureAudio();startGame();});
+
+var bl=document.getElementById('btn-l');
+bl.addEventListener('pointerdown',function(e){e.preventDefault();setFlip('left',true);});
+bl.addEventListener('pointerup',function(e){e.preventDefault();setFlip('left',false);});
+bl.addEventListener('pointerleave',function(){setFlip('left',false);});
+bl.addEventListener('pointercancel',function(){setFlip('left',false);});
+
+var br=document.getElementById('btn-r');
+br.addEventListener('pointerdown',function(e){e.preventDefault();setFlip('right',true);});
+br.addEventListener('pointerup',function(e){e.preventDefault();setFlip('right',false);});
+br.addEventListener('pointerleave',function(){setFlip('right',false);});
+br.addEventListener('pointercancel',function(){setFlip('right',false);});
+
+var bg2=document.getElementById('btn-go');
+bg2.addEventListener('pointerdown',function(e){e.preventDefault();ensureAudio();launchBall();});
+
+document.addEventListener('keydown',function(e){
+  if(e.code==='ArrowLeft'||e.code==='KeyA'){setFlip('left',true);e.preventDefault();}
+  if(e.code==='ArrowRight'||e.code==='KeyD'){setFlip('right',true);e.preventDefault();}
+  if(e.code==='Space'){ensureAudio();launchBall();e.preventDefault();}
+  if(e.code==='KeyS'){nudge();e.preventDefault();}
+});
+document.addEventListener('keyup',function(e){
+  if(e.code==='ArrowLeft'||e.code==='KeyA')setFlip('left',false);
+  if(e.code==='ArrowRight'||e.code==='KeyD')setFlip('right',false);
+});
+
+// MOUSE BUTTON CONTROLS - left click = left flipper, right click = right flipper
+// (keeps on-screen buttons, touch, and keyboard working too)
+document.addEventListener('mousedown',function(e){
+  if(e.button===0){setFlip('left',true);}
+  else if(e.button===2){setFlip('right',true);}
+  else if(e.button===1){ensureAudio();launchBall();e.preventDefault();}
+});
+document.addEventListener('mouseup',function(e){
+  if(e.button===0)setFlip('left',false);
+  if(e.button===2)setFlip('right',false);
+});
+document.addEventListener('contextmenu',function(e){e.preventDefault();});
+
+// INIT
+try{highScore=parseInt(localStorage.getItem('pin3d_hs')||'0')||0;}catch(e){highScore=0;}
+document.getElementById('modal-hs').textContent='High Score: '+highScore.toLocaleString()+' pts';
+updUI();
+setMsg('Ready! Click START GAME');
+
+function loop(){update();render();requestAnimationFrame(loop);}
+loop();
+
+})();
+</script>
+</body>
+</html>
